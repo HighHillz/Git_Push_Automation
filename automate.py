@@ -79,59 +79,41 @@ class Automate:
         else:
             print("Already a git repository.")
         
-        # Step 3: Pull changes from remote if it exists
-        should_stage_later = True  # flag to control final staging
-
+        # Step 3: Stage, commit, and pull changes from remote if it exists
         if Git.is_rebasing():
             print(Fore.YELLOW + "WARNING: A rebase is currently in progress.")
-
             while True:
                 print()
                 choice = prompt_input("Do you want to (c)ontinue, (a)bort, or (s)kip rebase handling for now? [c/a/s]").lower()
-
                 if choice == "c":
                     print("Staging resolved changes...")
                     subprocess.run(["git", "add", "."], check=True)
                     subprocess.run(["git", "rebase", "--continue"], check=True)
                     print("Rebase continued successfully.")
-                    should_stage_later = False  # already staged
                     break
-
                 elif choice == "a":
                     subprocess.run(["git", "rebase", "--abort"], check=True)
                     print("Rebase aborted.")
+                    self.stage_commit()
                     print("Pulling latest changes from remote...")
                     subprocess.run(["git", "pull", "origin", "main", "--rebase"], check=True)
                     break
-
                 elif choice == "s":
                     print("Skipping rebase handling. Rebase still active.")
-                    break
+                    return
+                else:
+                    print("Please enter a valid choice [c/a/s].")
         else:
-            # No rebase active — safe to pull
+            self.stage_commit()
             print("Pulling latest changes from remote...")
             subprocess.run(["git", "pull", "origin", "main", "--rebase"], check=True)
-            print("Pulled latest changes successfully.")
-
-        # Only stage if not already done
-        if should_stage_later:
-            print("Staging all local changes...")
-            subprocess.run(["git", "add", "."], check=True)
-
-        # Step 4: Commit changes
-        print("Commiting changes...")
-        result = subprocess.run(["git", "diff", "--cached", "--quiet"])
-        if result.returncode != 0:
-            commit_msg = prompt_input("Enter commit message (default: Initial commit)") or "Initial commit"
-            subprocess.run(["git", "commit", "-m", commit_msg], check=True)
-        else:
-            print("No changes to commit. Working tree is clean.")
+            print("Pulled successfully.")
         
-        # Step 5: Set remote URL
+        # Step 4: Set remote URL
         subprocess.run(["git", "remote", "remove", "origin"], check=False)
         subprocess.run(["git", "remote", "add", "origin", remote_url], check=True)
 
-        # Step 6: Push changes to GitHub in main branch
+        # Step 5: Push changes to GitHub in main branch
         result = subprocess.run(["git", "symbolic-ref", "--short", "HEAD"], capture_output=True, text=True)
         
         if result.returncode != 0: # Detached HEAD state
@@ -151,6 +133,20 @@ class Automate:
         print()
         print(Fore.GREEN + Style.BRIGHT + "SUCCESS: Pushed your project into GitHub!")
         print("Open this link (Ctrl + Click) to view your commit:", repo_path, sep="\t\t")
+    
+    def stage_commit(self):
+        """ Stage and commit changes in the current directory."""
+        print("Staging local changes...")
+        subprocess.run(["git", "add", "."], check=True)
+        
+        print("Commiting changes...")
+        result = subprocess.run(["git", "diff", "--cached", "--quiet"])
+        if result.returncode != 0:
+            print()
+            commit_msg = prompt_input("Enter commit message (default: Initial commit)") or "Initial commit"
+            subprocess.run(["git", "commit", "-m", commit_msg], check=True)
+        else:
+            print("No changes to commit. Working tree is clean.")
 
 def prompt_input(prompt: str) -> str:
     """ Helper function to prompt user input with a custom style. """
@@ -158,6 +154,5 @@ def prompt_input(prompt: str) -> str:
 
 if __name__ == "__main__":
     Automate()
-    
     print()
     prompt_input("Press something to exit")

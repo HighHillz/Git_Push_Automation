@@ -24,7 +24,7 @@ And just like that — your project is up on GitHub!
 
 ## Stats
 
-![Version](https://img.shields.io/badge/Version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/Version-1.0.1-blue.svg)
 ![Status](https://img.shields.io/badge/Status-Completed-green.svg)
 
 ## File Structure
