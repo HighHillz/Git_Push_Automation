@@ -25,7 +25,7 @@ And just like that — your project is up on GitHub!
 ## Stats
 
 ![Version](https://img.shields.io/badge/Version-1.0.1-blue.svg)
-![Status](https://img.shields.io/badge/Status-Completed-green.svg)
+![Status](https://img.shields.io/badge/Status-Updating-yellow.svg)
 
 ## File Structure
 ```bash
@@ -51,6 +51,12 @@ BASE_PROJECTS_PATH=C:/Your/Path/To/Coding/Projects
 I built this tool because pushing code with Git used to feel like a boss battle - especially when I was just starting out. Typos, forgotten stages, pull issues, rebase confusion — it was a lot.
 
 So instead of wrestling with Git every time, I created a Python script that could handle it all for me. Now it’s smooth, error-proof, and beginner-friendly. Plus, it helps you focus more on building and less on debugging your Git workflow.
+
+## Roadmap
+- [ ] Show problems
+- [ ] Define gitignore problems
+- [ ] Open an editor to write gitignore syntax
+- [ ] Read gitignore syntax
 
 ## Contribution
 Feel free to make an edit or change to this project to improve its stability. You may do so by first pulling a request or an issue to talk about it. Lets make Git a little less scary! All are welcome!
