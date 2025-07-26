@@ -5,7 +5,6 @@ All notable changes to this project will be noted here.
 ---
 
 ## [1.0.1] - 24 Jul 2025
-Introducing the first version of this project...
 
 ### Bugs Fixed
 Fixed a bug where:
